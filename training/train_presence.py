@@ -145,7 +145,7 @@ for test_file in all_files:
     # Print the combined accuracy
     print(f'Combined Test Accuracy for {test_file}: {test_acc_combined:.2f}')
 
-    plot_loss(history)
+    # plot_loss(history)
 
     # Predict for each table separately
     y_pred_A = (model.predict(X_test_A) > 0.5).astype(int)
