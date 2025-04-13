@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import pickle
 import pandas as pd
@@ -8,6 +9,7 @@ from scipy.spatial import cKDTree
 from sklearn.cluster import DBSCAN
 from collections import defaultdict
 from datetime import datetime, timedelta
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from util.config import TABLES, Z_MIN, Z_MAX
 
 # Function to round time to the nearest 0.1 second
@@ -120,7 +122,7 @@ def apply_dbscan(points, eps=0.3, min_samples=5, z_weight=0.25):
     return clustered_points, labels
 
 # Main loop for processing files (with clutter removal and DBSCAN noise removal)
-input_folder = '../data/'  # Update to use split files folder
+input_folder = 'data/'  # Update to use split files folder
 density_data = {table: [] for table in TABLES}
 centroid_data = {table: [] for table in TABLES}
 point_data = {table: [] for table in TABLES}
@@ -134,8 +136,8 @@ for file_name in os.listdir(input_folder):
         print(f'Processing file {input_file_path}')
 
         total_points_before_clutter = 0
-        total_points_after_clutter = 0
         total_points_after_dbscan = 0
+        total_points_after_dbscan_and_static_points = 0
 
         with open(input_file_path, 'r') as file:
             data = json.load(file)
@@ -163,10 +165,18 @@ for file_name in os.listdir(input_folder):
             coordinates_with_v = [(x, y, z, v) for x, y, z, v in zip(mmwave_point['x'], mmwave_point['y'], mmwave_point['z'], mmwave_point['v']) if x is not None and y is not None and z is not None]
             coordinates_with_v = [p for p in coordinates_with_v if 0 <= p[2] <= 2.0]
 
-            # Noise removal
+            total_points_before_clutter += len(coordinates_with_v)
+
+            # Noise remove step 1: DBscan
             clustered_points, labels = apply_dbscan(coordinates_with_v)
+            total_points_after_dbscan += len(clustered_points)
+
+            # Noise remove step 2: remove static points
             filtered_coordinates = remove_static_points(clustered_points, previous_frame_points_per_radar[radar_num])
-            previous_frame_points_per_radar[radar_num] = clustered_points
+            previous_frame_points_per_radar[radar_num] = clustered_points  # Update the previous frame points for the current radar
+            total_points_after_dbscan_and_static_points += len(filtered_coordinates)
+
+            # print(f"Time: {time_block}, Radar Nu m: {radar_num}, Original: {len(coordinates_with_v)}, After DBSCAN: {len(clustered_points)}, After static: {len(filtered_coordinates)}")
 
             aggregated_points[time_block].extend(filtered_coordinates)
 
@@ -183,8 +193,8 @@ for file_name in os.listdir(input_folder):
 
         total_points_per_file[file_name] = {
             'total_before_clutter': total_points_before_clutter,
-            'total_after_clutter': total_points_after_clutter,
-            'total_after_dbscan': total_points_after_dbscan
+            'total_after_dbscan': total_points_after_dbscan,
+            'total_points_after_dbscan_and_static_points': total_points_after_dbscan_and_static_points
         }
 
         overall_total_points += total_points_after_dbscan
@@ -193,9 +203,8 @@ for file_name in os.listdir(input_folder):
 for file_name, totals in total_points_per_file.items():
     print(f"File: {file_name}")
     print(f"  Total points before clutter removal: {totals['total_before_clutter']}")
-    print(f"  Total points after clutter removal: {totals['total_after_clutter']}")
     print(f"  Total points after DBSCAN noise removal: {totals['total_after_dbscan']}")
-    print()
+    print(f"  Total points after DBscan and static removal: {totals['total_points_after_dbscan_and_static_points']}\n")
 
 # Print the overall total points across all files
 print(f"Overall total points after DBSCAN noise removal across all files: {overall_total_points}")

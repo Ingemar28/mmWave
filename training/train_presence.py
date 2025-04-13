@@ -1,12 +1,16 @@
+import os
+import sys
 import pickle
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 from keras import layers
 import matplotlib.pyplot as plt
-from keras.optimizers.legacy import Adam
+from keras.optimizers import Adam
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from util.config import MAX_POINTS, FILE_LABEL_MAPPING
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+
 
 with open("data/density_dfs.pkl", "rb") as f:
     density_dfs = pickle.load(f)

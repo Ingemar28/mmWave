@@ -1,5 +1,6 @@
 import numpy as np
 from datetime import timedelta
+import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 from sklearn.cluster import DBSCAN
 from collections import defaultdict
@@ -110,3 +111,29 @@ def apply_dbscan(points, eps=0.3, min_samples=5, z_weight=0.25):
 
     clustered_points = [points[i] for i in range(len(points)) if labels[i] != -1]
     return clustered_points, labels
+
+def plot_loss(history):
+    # Extract loss values from the training process
+    train_loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    
+    # Number of epochs (assuming you know how many epochs were run)
+    epochs = range(1, len(train_loss) + 1)
+
+    # Create a new figure
+    plt.figure(figsize=(10, 6))
+
+    # Plot training and validation loss values
+    plt.plot(epochs, train_loss, label='Training Loss')
+    plt.plot(epochs, val_loss, label='Validation Loss')
+
+    # Add title and labels
+    plt.title('Training and Validation Loss Over Epochs')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+
+    # Set x-axis to show only integer values (epoch numbers)
+    plt.xticks(epochs)  # Set x-ticks to be exactly the epoch numbers (1, 2, 3, ..., 20)
+
+    plt.legend()
+    plt.show()
