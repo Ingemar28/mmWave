@@ -5,6 +5,32 @@ from scipy.spatial import cKDTree
 from sklearn.cluster import DBSCAN
 from collections import defaultdict
 
+def plot_loss(history):
+    # Extract loss values from the training process
+    train_loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    
+    # Number of epochs (assuming you know how many epochs were run)
+    epochs = range(1, len(train_loss) + 1)
+
+    # Create a new figure
+    plt.figure(figsize=(10, 6))
+
+    # Plot training and validation loss values
+    plt.plot(epochs, train_loss, label='Training Loss')
+    plt.plot(epochs, val_loss, label='Validation Loss')
+
+    # Add title and labels
+    plt.title('Training and Validation Loss Over Epochs')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+
+    # Set x-axis to show only integer values (epoch numbers)
+    plt.xticks(epochs)  # Set x-ticks to be exactly the epoch numbers (1, 2, 3, ..., 20)
+
+    plt.legend()
+    plt.show()
+
 # Function to round time to the nearest 0.1 second
 def round_to_0_1_seconds(time):
     """Round time to the nearest 0.1 second."""

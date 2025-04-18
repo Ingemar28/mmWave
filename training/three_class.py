@@ -11,6 +11,7 @@ from keras import layers, models, callbacks, regularizers
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from util.config import MAX_POINTS, FILE_LABEL_MAPPING
+from util.util import plot_loss
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 
 with open("data/density_dfs.pkl", "rb") as f:

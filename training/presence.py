@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from keras.optimizers import Adam
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from util.config import MAX_POINTS, FILE_LABEL_MAPPING
+from util.util import plot_loss
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 
 
@@ -145,7 +146,7 @@ for test_file in all_files:
     # Print the combined accuracy
     print(f'Combined Test Accuracy for {test_file}: {test_acc_combined:.2f}')
 
-    # plot_loss(history)
+    plot_loss(history)
 
     # Predict for each table separately
     y_pred_A = (model.predict(X_test_A) > 0.5).astype(int)
