@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository provides code and utilities for preprocessing, analyzing, and classifying point cloud data captured by mmWave radars. The main goal is to process raw radar data to detect the presence and actions (such as "sit", "stand", "hybrid") of individuals at different tables using advanced deep learning models. The codebase was developed as part of research described in an academic paper.
+This repository provides code and utilities for preprocessing, analyzing, and classifying point cloud data captured by mmWave radars. The main goal is to process raw radar data to detect the presence and actions (such as "sit", "stand", "hybrid") of individuals at different tables using advanced deep learning models. The codebase was developed as part of research.
 
 ## Features
 
@@ -39,56 +39,3 @@ This repository provides code and utilities for preprocessing, analyzing, and cl
 
 4. **Utilities (`util/util.py`):**
     - Functions for clustering (DBSCAN), density/centroid calculation, static point removal, and plotting.
-
-## Example Usage
-
-### Preprocessing
-
-```bash
-python preprocess/preprocess.py
-```
-
-### Training a Model
-
-```bash
-python training/three_class_raw_points.py
-```
-
-### Presence Detection
-
-```bash
-python training/presence.py
-```
-
-## Dependencies
-
-- Python 3.x
-- numpy, pandas, matplotlib, scikit-learn
-- tensorflow, keras
-- pickle
-
-Install with:
-
-```bash
-pip install numpy pandas matplotlib scikit-learn tensorflow keras
-```
-
-## Data
-
-- Place raw radar data as JSON files in the `data/` directory.
-- Processed data will be saved as `.pkl` files in the same directory.
-
-## Citation
-
-If you use this codebase in your research or publication, please cite our paper:
-
-```
-[Add your paper citation here]
-```
-
-## Contact
-
-For questions or collaboration, please contact [Ingemar28](https://github.com/Ingemar28).
-
----
-This README was generated based on the repository's codebase for use in an academic publication.
